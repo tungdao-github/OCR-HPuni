@@ -1,0 +1,34 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      # Set this in production.
+      - API_KEY=change-me
+      - MAX_UPLOAD_MB=25
+      - MAX_PAGES=50
+      - MAX_CONCURRENT_JOBS=1
+      - LOG_LEVEL=INFO
+      # If you want browser calls:
+      # - CORS_ALLOW_ORIGINS=https://your-frontend.com
+    ports:
+      - "8000:8000"
+    volumes:
+      - torch_cache:/root/.cache/torch
+      - hf_cache:/root/.cache/huggingface
+    restart: unless-stopped
+
+  # Free public URL without opening ports (ephemeral URL).
+  # Run with: docker compose --profile tunnel up -d
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    profiles: ["tunnel"]
+    command: ["tunnel", "--no-autoupdate", "--url", "http://api:8000"]
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  torch_cache:
+  hf_cache:
