@@ -1,14 +1,53 @@
 import asyncio
 import io
+import json
 import logging
 import os
 import re
 import socket
+import sys
 import time
 import threading
 from dataclasses import dataclass
 from ipaddress import ip_address
 from typing import Any
+
+
+def _load_app_settings() -> None:
+    path = os.getenv("APP_CONFIG_PATH")
+    if not path:
+        path = os.path.join(os.path.dirname(__file__), "appsettings.json")
+    try:
+        if not os.path.isfile(path):
+            return
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if not isinstance(data, dict):
+            return
+        for key, value in data.items():
+            if value is None:
+                continue
+            if os.getenv(str(key)) not in (None, ""):
+                continue
+            os.environ[str(key)] = str(value)
+
+        app_root = os.getenv("APP_ROOT")
+        if app_root and os.path.isdir(app_root):
+            try:
+                if os.path.abspath(os.getcwd()) != os.path.abspath(app_root):
+                    os.chdir(app_root)
+                if app_root not in sys.path:
+                    sys.path.insert(0, app_root)
+                if not os.getenv("PYTHONPATH"):
+                    os.environ["PYTHONPATH"] = app_root
+            except Exception as exc:
+                print(f"[config] Failed to apply APP_ROOT {app_root}: {exc}", flush=True)
+    except Exception as exc:
+        print(f"[config] Failed to load {path}: {exc}", flush=True)
+
+
+_load_app_settings()
+
 
 import httpx
 import numpy as np

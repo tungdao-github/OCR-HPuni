@@ -9,6 +9,25 @@
 - [2. Kiến trúc kỹ thuật](#2)
 - [3. Cài đặt và chạy thử](#3)
 
+## Quick IIS Deploy (one shot)
+This is the shortest path for a fresh clone on Windows Server:
+1. Clone into a fixed path (recommended): `C:\apps\OCR-HPuni`
+2. Run:
+```powershell
+cd C:\apps\OCR-HPuni
+powershell -ExecutionPolicy Bypass -File .\deploy-iis.ps1 -AppRoot "C:\apps\OCR-HPuni" -AppPool "DefaultAppPool"
+```
+3. Test: `http://localhost:9090/health`
+
+### Create App Pool + Site (auto, if missing)
+```powershell
+powershell -ExecutionPolicy Bypass -File .\deploy-iis.ps1 `
+  -AppRoot "C:\apps\OCR-HPuni" `
+  -AppPool "OCR-HPuni-Pool" `
+  -SiteName "OCR-HPuni" `
+  -Port 9090
+```
+
 <a name="1"></a>
 
 ## 1. Giới thiệu
