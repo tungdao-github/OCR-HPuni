@@ -108,7 +108,8 @@ if ($SiteName) {
         $exists = & $appcmd list site "$SiteName" 2>$null
         if (-not $exists) {
             Write-Info "Create IIS site: $SiteName (port $Port)"
-            & $appcmd add site /name:$SiteName /bindings:"http/*:$Port:" /physicalPath:"$AppRoot" | Out-Null
+            $binding = ("http/*:{0}:" -f $Port)
+            & $appcmd add site /name:$SiteName /bindings:$binding /physicalPath:"$AppRoot" | Out-Null
         } else {
             Write-Info "Site exists: $SiteName"
             & $appcmd set site "$SiteName" /physicalPath:"$AppRoot" | Out-Null

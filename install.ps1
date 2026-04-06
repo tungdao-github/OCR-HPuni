@@ -41,6 +41,10 @@ $AppPool = Read-Default "IIS App Pool name" $AppPool
 $SiteName = Read-Default "IIS Site name" $SiteName
 $Port = Read-DefaultInt "IIS Port" $Port
 
+if (-not [System.IO.Path]::IsPathRooted($AppRoot)) {
+    $AppRoot = Join-Path (Get-Location).Path $AppRoot
+}
+
 if ([string]::IsNullOrWhiteSpace($ApiKey)) {
     $ApiKey = Read-Host "API Key (leave empty to skip)"
 }
