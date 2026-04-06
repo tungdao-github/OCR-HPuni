@@ -7,12 +7,14 @@ __pycache__/
 
 # Virtual environments
 .venv/
+.venv_iis/
 venv/
 ENV/
 
 # Logs
 *.log
 log/
+logs/
 
 # Caches
 .pytest_cache/
@@ -32,3 +34,4 @@ dist/
 # Env files
 .env
 .env.*
+appsettings.json

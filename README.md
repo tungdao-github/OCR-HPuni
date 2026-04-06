@@ -19,6 +19,12 @@ powershell -ExecutionPolicy Bypass -File .\deploy-iis.ps1 -AppRoot "C:\apps\OCR-
 ```
 3. Test: `http://localhost:9090/health`
 
+### One-file installer (interactive, from anywhere)
+```powershell
+powershell -ExecutionPolicy Bypass -File "C:\apps\OCR-HPuni\install.ps1"
+```
+This will prompt for AppRoot/AppPool/Site/Port/ApiKey/CORS and run the full setup.
+
 ### Create App Pool + Site (auto, if missing)
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\deploy-iis.ps1 `

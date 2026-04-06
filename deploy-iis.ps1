@@ -114,6 +114,8 @@ if ($SiteName) {
             & $appcmd set site "$SiteName" /physicalPath:"$AppRoot" | Out-Null
         }
         & $appcmd set app "$SiteName/" /applicationPool:"$AppPool" | Out-Null
+        & $appcmd start apppool "$AppPool" | Out-Null
+        & $appcmd start site "$SiteName" | Out-Null
     } else {
         Write-Info "Warning: appcmd not found, skip site setup."
     }
